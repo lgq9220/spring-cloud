@@ -1,14 +1,7 @@
 server:
   port: 8070
-  
-msg: Hello
 
-spring:
-  rabbitmq:
-    host: rabbitmq
-    port: 30672
-    username: user
-    password: bitnami
+msg: Hello
 
 eureka:
   instance:
