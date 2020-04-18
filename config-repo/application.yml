@@ -21,6 +21,9 @@ ribbon:
 spring:
   rabbitmq:
     host: rabbitmq
+    port: 30672
+    username: user
+    password: bitnami
   sleuth:
     sampler:
       percentage: 1
