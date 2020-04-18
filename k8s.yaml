@@ -292,9 +292,9 @@ metadata:
 spec:
   ports:
     - name: http
-      port: 8060
+      port: 9411
       protocol: TCP
-      targetPort: 8060
+      targetPort: 9411
   selector:
     app: zipkin
 ---
@@ -309,7 +309,7 @@ spec:
         paths:
           - backend:
               serviceName: zipkin
-              servicePort: 8060
+              servicePort: 9411
 #-------------monitor-----------------
 ---
 apiVersion: apps/v1
