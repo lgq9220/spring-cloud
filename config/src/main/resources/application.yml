@@ -17,10 +17,13 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/zhangxd1989/spring-boot-cloud
+          uri: https://github.com/puhaiyang/spring-boot-cloud
           search-paths: config-repo
   rabbitmq:
     host: rabbitmq
+    port: 30672
+    username: user
+    password: bitnami
 
 security:
   user:

@@ -3,6 +3,13 @@ server:
   
 msg: Hello
 
+spring:
+  rabbitmq:
+    host: rabbitmq
+    port: 30672
+    username: user
+    password: bitnami
+
 eureka:
   instance:
     metadata-map:
