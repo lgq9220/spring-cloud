@@ -23,6 +23,9 @@ eureka:
 spring:
   rabbitmq:
     host: rabbitmq
+    port: 30672
+    username: user
+    password: bitnami
   boot:
     admin:
       routes:
