@@ -29,7 +29,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: registry-service
+  name: registry
 spec:
   ports:
     - name: http
@@ -49,5 +49,318 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: registry-service
+              serviceName: registry
               servicePort: 8761
+#-------------config-----------------
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: config
+    spec:
+      containers:
+        - image: ccr.ccs.tencentyun.com/spring-boot-cloud/config:latest
+          imagePullPolicy: Always
+          name: config
+          ports:
+            - containerPort: 8888
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: config
+spec:
+  ports:
+    - name: http
+      port: 8888
+      protocol: TCP
+      targetPort: 8888
+  selector:
+    app: config
+#-------------svca-service-----------------
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svca-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: svca-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: svca-service
+    spec:
+      containers:
+        - image: ccr.ccs.tencentyun.com/spring-boot-cloud/svca-service:latest
+          imagePullPolicy: Always
+          name: config
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svca-service
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: svca-service
+#-------------svcb-service-----------------
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svcb-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: svcb-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: svcb-service
+    spec:
+      containers:
+        - image: ccr.ccs.tencentyun.com/spring-boot-cloud/svcb-service:latest
+          imagePullPolicy: Always
+          name: config
+          ports:
+            - containerPort: 8070
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svcb-service
+spec:
+  ports:
+    - name: http
+      port: 8070
+      protocol: TCP
+      targetPort: 8070
+  selector:
+    app: svcb-service
+#-------------auth-service-----------------
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      containers:
+        - image: ccr.ccs.tencentyun.com/spring-boot-cloud/auth-service:latest
+          imagePullPolicy: Always
+          name: config
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+spec:
+  ports:
+    - name: http
+      port: 5000
+      protocol: TCP
+      targetPort: 5000
+  selector:
+    app: auth-service
+#-------------gateway-----------------
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+        - image: ccr.ccs.tencentyun.com/spring-boot-cloud/gateway:latest
+          imagePullPolicy: Always
+          name: config
+          ports:
+            - containerPort: 8060
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+spec:
+  ports:
+    - name: http
+      port: 8060
+      protocol: TCP
+      targetPort: 8060
+  selector:
+    app: gateway
+#-------------zipkin-----------------
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zipkin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zipkin
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: zipkin
+    spec:
+      containers:
+        - image: ccr.ccs.tencentyun.com/spring-boot-cloud/zipkin:latest
+          imagePullPolicy: Always
+          name: config
+          ports:
+            - containerPort: 9411
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zipkin
+spec:
+  ports:
+    - name: http
+      port: 8060
+      protocol: TCP
+      targetPort: 8060
+  selector:
+    app: zipkin
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: zipkin-nginx
+spec:
+  rules:
+    - host: zipkin.springcloud.com
+      http:
+        paths:
+          - backend:
+              serviceName: zipkin
+              servicePort: 8060
+#-------------monitor-----------------
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: monitor
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: monitor
+    spec:
+      containers:
+        - image: ccr.ccs.tencentyun.com/spring-boot-cloud/monitor:latest
+          imagePullPolicy: Always
+          name: config
+          ports:
+            - containerPort: 8040
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: monitor
+spec:
+  ports:
+    - name: http
+      port: 8040
+      protocol: TCP
+      targetPort: 8040
+  selector:
+    app: monitor
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: monitor-nginx
+spec:
+  rules:
+    - host: monitor.springcloud.com
+      http:
+        paths:
+          - backend:
+              serviceName: monitor
+              servicePort: 8040
