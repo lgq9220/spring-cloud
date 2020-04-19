@@ -20,7 +20,7 @@ ribbon:
 
 spring:
   rabbitmq:
-    host: rabbitmq
+    host: 192.168.85.133
     port: 30672
     username: user
     password: bitnami
