@@ -256,6 +256,19 @@ spec:
       targetPort: 8060
   selector:
     app: gateway
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: gateway
+spec:
+  rules:
+    - host: gateway.springcloud.com
+      http:
+        paths:
+          - backend:
+              serviceName: gateway
+              servicePort: 8060
 #-------------zipkin-----------------
 ---
 apiVersion: apps/v1
