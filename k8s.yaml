@@ -157,7 +157,7 @@ spec:
       containers:
         - image: ccr.ccs.tencentyun.com/spring-boot-cloud/svcb-service:latest
           imagePullPolicy: Always
-          name: config
+          name: svcb-service
           ports:
             - containerPort: 8070
               protocol: TCP
