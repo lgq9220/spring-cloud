@@ -18,6 +18,16 @@ spec:
       labels:
         app: registry
     spec:
+      initContainers:
+        - name: init-skywalking-agent
+          image: ccr.ccs.tencentyun.com/haiyang/skywalking-agent:7.0.0
+          command:
+            - 'sh'
+            - '-c'
+            - 'set -ex;mkdir -p /vmskywalking/agent;cp -r /skywalking/agent/* /vmskywalking/agent;'
+          volumeMounts:
+            - mountPath: /vmskywalking/agent
+              name: skywalking-agent
       containers:
         - image: ccr.ccs.tencentyun.com/spring-boot-cloud/registry:latest
           imagePullPolicy: Always
@@ -25,6 +35,12 @@ spec:
           ports:
             - containerPort: 8761
               protocol: TCP
+          volumeMounts:
+            - mountPath: /opt/skywalking/agent
+              name: skywalking-agent
+      volumes:
+        - name: skywalking-agent
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
@@ -72,6 +88,16 @@ spec:
       labels:
         app: config
     spec:
+      initContainers:
+        - name: init-skywalking-agent
+          image: ccr.ccs.tencentyun.com/haiyang/skywalking-agent:7.0.0
+          command:
+            - 'sh'
+            - '-c'
+            - 'set -ex;mkdir -p /vmskywalking/agent;cp -r /skywalking/agent/* /vmskywalking/agent;'
+          volumeMounts:
+            - mountPath: /vmskywalking/agent
+              name: skywalking-agent
       containers:
         - image: ccr.ccs.tencentyun.com/spring-boot-cloud/config:latest
           imagePullPolicy: Always
@@ -79,6 +105,12 @@ spec:
           ports:
             - containerPort: 8888
               protocol: TCP
+          volumeMounts:
+            - mountPath: /opt/skywalking/agent
+              name: skywalking-agent
+      volumes:
+        - name: skywalking-agent
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
@@ -113,13 +145,29 @@ spec:
       labels:
         app: svca-service
     spec:
+      initContainers:
+        - name: init-skywalking-agent
+          image: ccr.ccs.tencentyun.com/haiyang/skywalking-agent:7.0.0
+          command:
+            - 'sh'
+            - '-c'
+            - 'set -ex;mkdir -p /vmskywalking/agent;cp -r /skywalking/agent/* /vmskywalking/agent;'
+          volumeMounts:
+            - mountPath: /vmskywalking/agent
+              name: skywalking-agent
       containers:
         - image: ccr.ccs.tencentyun.com/spring-boot-cloud/svca-service:latest
           imagePullPolicy: Always
-          name: config
+          name: svca-service
           ports:
             - containerPort: 8080
               protocol: TCP
+          volumeMounts:
+            - mountPath: /opt/skywalking/agent
+              name: skywalking-agent
+      volumes:
+        - name: skywalking-agent
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
@@ -154,6 +202,16 @@ spec:
       labels:
         app: svcb-service
     spec:
+      initContainers:
+        - name: init-skywalking-agent
+          image: ccr.ccs.tencentyun.com/haiyang/skywalking-agent:7.0.0
+          command:
+            - 'sh'
+            - '-c'
+            - 'set -ex;mkdir -p /vmskywalking/agent;cp -r /skywalking/agent/* /vmskywalking/agent;'
+          volumeMounts:
+            - mountPath: /vmskywalking/agent
+              name: skywalking-agent
       containers:
         - image: ccr.ccs.tencentyun.com/spring-boot-cloud/svcb-service:latest
           imagePullPolicy: Always
@@ -161,6 +219,12 @@ spec:
           ports:
             - containerPort: 8070
               protocol: TCP
+          volumeMounts:
+            - mountPath: /opt/skywalking/agent
+              name: skywalking-agent
+      volumes:
+        - name: skywalking-agent
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
@@ -195,13 +259,29 @@ spec:
       labels:
         app: auth-service
     spec:
+      initContainers:
+        - name: init-skywalking-agent
+          image: ccr.ccs.tencentyun.com/haiyang/skywalking-agent:7.0.0
+          command:
+            - 'sh'
+            - '-c'
+            - 'set -ex;mkdir -p /vmskywalking/agent;cp -r /skywalking/agent/* /vmskywalking/agent;'
+          volumeMounts:
+            - mountPath: /vmskywalking/agent
+              name: skywalking-agent
       containers:
         - image: ccr.ccs.tencentyun.com/spring-boot-cloud/auth-service:latest
           imagePullPolicy: Always
-          name: config
+          name: auth-service
           ports:
             - containerPort: 5000
               protocol: TCP
+          volumeMounts:
+            - mountPath: /opt/skywalking/agent
+              name: skywalking-agent
+      volumes:
+        - name: skywalking-agent
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
@@ -236,13 +316,34 @@ spec:
       labels:
         app: gateway
     spec:
+      initContainers:
+        - name: init-skywalking-agent
+          image: ccr.ccs.tencentyun.com/haiyang/skywalking-agent:7.0.0
+          command:
+            - 'sh'
+            - '-c'
+            - 'set -ex;mkdir -p /vmskywalking/agent;cp -r /skywalking/agent/* /vmskywalking/agent;'
+          volumeMounts:
+            - mountPath: /vmskywalking/agent
+              name: skywalking-agent
       containers:
         - image: ccr.ccs.tencentyun.com/spring-boot-cloud/gateway:latest
           imagePullPolicy: Always
-          name: config
+          name: gateway
           ports:
             - containerPort: 8060
               protocol: TCP
+          env:
+            - name: SKYWALKING_ADDR
+              value: skywalking-oap-server
+            - name: APP_ID
+              value: gateway
+          volumeMounts:
+            - mountPath: /opt/skywalking/agent
+              name: skywalking-agent
+      volumes:
+        - name: skywalking-agent
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
@@ -290,13 +391,35 @@ spec:
       labels:
         app: zipkin
     spec:
+      initContainers:
+        - name: init-skywalking-agent
+          image: ccr.ccs.tencentyun.com/haiyang/skywalking-agent:7.0.0
+          command:
+            - 'sh'
+            - '-c'
+            - 'set -ex;mkdir -p /vmskywalking/agent;cp -r /skywalking/agent/* /vmskywalking/agent;'
+          volumeMounts:
+            - mountPath: /vmskywalking/agent
+              name: skywalking-agent
       containers:
         - image: ccr.ccs.tencentyun.com/spring-boot-cloud/zipkin:latest
           imagePullPolicy: Always
-          name: config
+          name: zipkin-server
           ports:
             - containerPort: 9411
               protocol: TCP
+          env:
+            - name: SKYWALKING_ADDR
+              value: skywalking-oap-server
+            - name: APP_ID
+              value: zipkin-server
+          volumeMounts:
+            - mountPath: /opt/skywalking/agent
+              name: skywalking-agent
+      volumes:
+        - name: skywalking-agent
+          emptyDir: {}
+
 ---
 apiVersion: v1
 kind: Service
@@ -344,6 +467,16 @@ spec:
       labels:
         app: monitor
     spec:
+      initContainers:
+        - name: init-skywalking-agent
+          image: ccr.ccs.tencentyun.com/haiyang/skywalking-agent:7.0.0
+          command:
+            - 'sh'
+            - '-c'
+            - 'set -ex;mkdir -p /vmskywalking/agent;cp -r /skywalking/agent/* /vmskywalking/agent;'
+          volumeMounts:
+            - mountPath: /vmskywalking/agent
+              name: skywalking-agent
       containers:
         - image: ccr.ccs.tencentyun.com/spring-boot-cloud/monitor:latest
           imagePullPolicy: Always
@@ -351,6 +484,12 @@ spec:
           ports:
             - containerPort: 8040
               protocol: TCP
+          volumeMounts:
+            - mountPath: /opt/skywalking/agent
+              name: skywalking-agent
+      volumes:
+        - name: skywalking-agent
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

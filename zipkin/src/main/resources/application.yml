@@ -2,8 +2,8 @@ spring:
   application:
     name: zipkin
   rabbitmq:
-    host:  ${RABBITMQ_HOST:rabbitmq}
-    port: 30672
+    host: ${RABBITMQ_HOST:rabbitmq}
+    port: 5672
     username: user
     password: bitnami
 

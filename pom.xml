@@ -31,7 +31,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
-        <docker.plugin.version>1.2.2</docker.plugin.version>
         <docker.image.prefix>spring-boot-cloud</docker.image.prefix>
         <spring.cloud.version>Dalston.SR4</spring.cloud.version>
         <spring-boot-admin.version>1.5.4</spring-boot-admin.version>
@@ -100,33 +99,41 @@
                         </execution>
                     </executions>
                 </plugin>
+
                 <plugin>
-                    <groupId>com.spotify</groupId>
+                    <groupId>io.fabric8</groupId>
                     <artifactId>docker-maven-plugin</artifactId>
-                    <version>${docker.plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>build</goal>
-                            </goals>
-                        </execution>
-                    </executions>
+                    <version>0.33.0</version>
+
                     <configuration>
                         <!--dockerhost on remote-->
                         <!--
-                       <dockerHost>https://docker.haiyang.com:2376</dockerHost>
-                       <dockerCertPath>C:\docker.haiyang.com</dockerCertPath>
+                        <dockerHost>https://docker.haiyang.com:2376</dockerHost>
+                        <certPath>C:\docker.haiyang.com</certPath>
                         -->
-                       <imageName>ccr.ccs.tencentyun.com/${docker.image.prefix}/${project.artifactId}</imageName>
-                       <dockerDirectory>${project.basedir}/</dockerDirectory>
-                       <resources>
-                           <resource>
-                               <targetPath>/</targetPath>
-                               <directory>${project.build.directory}</directory>
-                               <include>${project.build.finalName}.jar</include>
-                           </resource>
-                       </resources>
+
+                        <!--registry地址,用于推送镜像-->
+                        <registry>ccr.ccs.tencentyun.com</registry>
+                        <!--认证配置,用于私有registry认证,如果忘记了可以去阿里的registry查看-->
+                        <authConfig>
+                            <push>
+                                <username>yourusername</username>
+                                <password>yourpassword</password>
+                            </push>
+                        </authConfig>
+
+                        <images>
+                            <image>
+                                <name>${docker.image.prefix}/${project.artifactId}</name>
+                                <alias>${project.name}</alias>
+                                <build>
+                                    <dockerFile>${project.basedir}/Dockerfile</dockerFile>
+                                </build>
+                                <run>
+                                    <namingStrategy>alias</namingStrategy>
+                                </run>
+                            </image>
+                        </images>
                    </configuration>
                </plugin>
            </plugins>
