@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "registry.fullname" . }}
+  labels:
+    {{- include "registry.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "registry.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "registry.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- if .Values.skywalkingAgent.enabled }}
+      initContainers:
+        - name: init-skywalking-agent
+          image: "{{ .Values.skywalkingAgent.image.repository | default "ccr.ccs.tencentyun.com/haiyang/skywalking-agent" }}:{{ .Values.skywalkingAgent.image.tag | default "7.0.0" }}"
+          command:
+            - "sh"
+            - "-c"
+            - "set -ex;mkdir -p /vmskywalking/agent;cp -r /skywalking/agent/* /vmskywalking/agent;"
+          volumeMounts:
+            - mountPath: /vmskywalking/agent
+              name: skywalking-agent
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "registry.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.image.containerPort | default 8080 }}
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.skywalkingAgent.enabled }}
+          volumeMounts:
+            - mountPath: /opt/skywalking/agent
+              name: skywalking-agent
+      volumes:
+        - name: skywalking-agent
+          emptyDir: {}
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
