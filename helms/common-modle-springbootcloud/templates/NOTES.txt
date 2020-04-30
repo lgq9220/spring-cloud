@@ -1,0 +1,15 @@
+hi,boy!the application {{ .Release.Name }} has successful deployed!
+
+dockerImage: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+chartName: {{ .Chart.Name }}
+containerPort: {{ .Values.image.containerPort }}
+serviceType: {{ .Values.service.type }}
+{{-  if eq "NodePort" .Values.service.type }}
+nodePort: {{ .Values.service.nodePort }}
+{{- end }}
+appName: {{ .Release.Name }}
+nameSpace: {{ .Release.Namespace }}
+readinessIsEnable: {{ .Values.readiness.enabled }}
+-------------------------
+:-D Have a nice day! :-D
+-------------------------

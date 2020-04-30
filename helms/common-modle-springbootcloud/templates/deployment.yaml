@@ -51,6 +51,22 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.readiness.enabled }}
+          readinessProbe:
+            exec:
+              command:
+                - echo
+                - '0'
+            initialDelaySeconds: 180
+            periodSeconds: 10
+          {{- end }}
+          env:
+            - name: EUREKA_SERVER_ADDRESS
+              value: "{{- .Values.evn.eureka_server_address }}"
+            - name: CONFIG_SERVER_ADDRESS
+              value: "{{- .Values.evn.config_server_address }}"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "{{- .Values.evn.spring_profiles_active }}"
           {{- if .Values.skywalkingAgent.enabled }}
           volumeMounts:
             - mountPath: /opt/skywalking/agent
