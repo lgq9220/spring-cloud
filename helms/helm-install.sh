@@ -1,7 +1,30 @@
 #!/usr/bin/env bash
+################### 配置信息begin ###################
+project_git_url=https://github.com/puhaiyang/spring-boot-cloud.git
+#docker镜像仓库地址
+image_domain=ccr.ccs.tencentyun.com/spring-boot-cloud
+#项目的根目录
+git_root_path=~/git
+#项目目录
+git=$git_root_path/$pname
+#通用chart目录
+chart_root_path=~/git/helms
+#版本号,docker的tag
+version=`date +%Y%m%d%H%M`
+################### 配置信息end ###################
+########################初始化 begin###########################
+#不存在项目目录的话，则先进行初始化
+if [ ! -d $git_root_path ];then
+    echo '不存项目目录，先进行初始化'
+	mkdir $git_root_path
+	cd $git_root_path
+	git clone $project_git_url
+fi
+########################初始化 end###########################
 source /etc/profile
 if [ -z "$1" ]; then
-    branch=dev
+    #默认分支名称
+    branch=master
 else
     branch=$1
 fi
@@ -11,20 +34,13 @@ echo ':-D hi,boy!welcome to automatic depoly sh! :-D'
 echo '----------------------------------------------'
 
 echo -e "branch:$branch, 系统服务列表:"
-ls git/  |grep "spring-boot-cloud"
+ls $git_root_path/  |grep "spring-boot-cloud"
 echo -e "请输入模块名称(请输入spring-boot-cloud-xxx后的xxx即可):"
 read pname
 pname="spring-boot-cloud-$pname"
 echo "更新的模块：$pname"
 
-image_domain=ccr.ccs.tencentyun.com/spring-boot-cloud
-git_root_path=~/git
-git=~/git/$pname
-chart_root_path=~/git/devops/charts
-version=`date +%Y%m%d%H%M`
-#version='latest'
-app_dir=~/app/$pname
-
+#切换到项目的目录
 cd $git
 git fetch --all
 git reset --hard origin/$branch
@@ -36,7 +52,7 @@ echo '统一处理日志文件(logback-spring.xml)配置...'
 sed "s/module/$pname/g" ~/config/logback_template.xml > $git/src/main/resources/logback-spring.xml
 echo '统一处理启动(bootstrap.properties)配置...'
 sed "s/module/$pname/g" ~/config/spring-boot-cloud-template.properties > $git/src/main/resources/bootstrap.properties
-#因为项目是maven聚合项目，需要在git的根目录进打包,-pl --projects <arg> 构建制定的模块，模块间用逗号分隔
+#项目是maven聚合项目，需要在git的根目录进打包,-pl --projects <arg> 构建制定的模块，模块间用逗号分隔
 #-am --also-make 同时构建所列模块的依赖模块；
 cd $git_root_path
 
