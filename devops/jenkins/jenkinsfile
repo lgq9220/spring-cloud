@@ -1,0 +1,114 @@
+/**
+ * 获取项目模块列表
+ */
+def static getModuleList() {
+    return ['auth-service', 'config', 'gateway', 'monitor', 'registry', 'svca-service', 'svcb-service', 'zipkin']
+}
+
+
+/**
+ * 发送钉钉审计消息
+ * @param deployModuleName 部署的项目名称
+ * @param packageSubmitter 申请发布人
+ * @param auditSubmitterDingTalkMobile 审计人钉钉的手机号
+ * @return
+ */
+def sendDingtalkAuditMsg(deployModuleName, packageSubmitter, auditSubmitterDingTalkMobile) {
+    dingtalk(
+            robot: dingTalkRobotId,
+            type: 'ACTION_CARD',
+            title: '审批通知消息',
+            text: [
+                    '审批提醒',
+                    '---',
+                    '大佬好呀，您有一个发布项目的审批提醒喔！',
+                    "- 模块名称: ${deployModuleName}",
+                    "- 发起人: ${packageSubmitter}"
+            ],
+            btns: [
+                    [
+                            title    : '前往审批',
+                            actionUrl: 'https://www.dingtalk.com/'
+                    ],
+                    [
+                            title    : '不予处理',
+                            actionUrl: 'https://www.dingtalk.com/'
+                    ]
+            ],
+            at: [auditSubmitterDingTalkMobile]
+    )
+}
+/**
+ * 发布部署成功的通知
+ * @param deployModuleName 模块名称
+ * @param packageSubmitter 发包人
+ * @param aduitInputResult 审核人
+ */
+def sendDeploySuccessDingtalkMsg(deployModuleName, packageSubmitter, aduitInputResult) {
+    dingtalk(
+            robot: dingTalkRobotId,
+            type: 'MARKDOWN',
+            title: '部署完毕通知',
+            atAll: true,
+            text: [
+                    '部署完毕通知',
+                    '---',
+                    "各位大佬好呀!",
+                    "- 模块名称: <font color=blue>${deployModuleName}</font>",
+                    "- 发起人: ${packageSubmitter}",
+                    "- 审批人: ${aduitInputResult}",
+                    "",
+                    "已完成部署"
+            ]
+    )
+}
+
+pipeline {
+    agent any
+
+    environment {
+        //打包输入框结果
+        packageInputResult = ''
+        //审批输入框结果
+        aduitInputResult = ''
+        packageSubmitter = 'puhaiyang'
+        auditSubmitter = 'puhaiyang'
+        dingTalkRobotId = 'ffc31242-2293-4b85-a30c-36797b844966'
+        auditSubmitterDingTalkMobile = '15700352233'
+        moduleList = getModuleList()
+    }
+
+    stages {
+        stage('打包') {
+            steps {
+                script {
+                    //部署的模块列表
+                    packageInputResult = input id: 'Test_deploy_001', message: '请选择将要发布的模块', ok: '确定',
+                            parameters: [choice(choices: moduleList, description: '请选择部署的项目', name: 'deployModuleName')],
+                            submitter: "${packageSubmitter}", submitterParameter: 'packageSubmitter'
+                }
+                echo "${packageInputResult.deployModuleName} will deploy!!!"
+            }
+        }
+
+        stage('审批') {
+            steps {
+                //发送通知告诉审批人有新的任务需要进行审批了
+                sendDingtalkAuditMsg(packageInputResult.deployModuleName, packageInputResult.packageSubmitter, auditSubmitterDingTalkMobile)
+                script {
+                    aduitInputResult = input message: "确定发布${packageInputResult.deployModuleName}模块吗?",
+                            ok: '确定', submitter: "${auditSubmitter}", submitterParameter: 'auditSubmitter'
+                }
+                echo "${aduitInputResult}审核完毕"
+            }
+        }
+
+        stage('发布') {
+            steps {
+                echo "${packageInputResult.deployModuleName}发布完毕"
+                //发布完，通知所有人发布完成了
+                sendDeploySuccessDingtalkMsg("${packageInputResult.deployModuleName}", "${packageInputResult.packageSubmitter}", "${aduitInputResult}")
+            }
+        }
+    }
+}
