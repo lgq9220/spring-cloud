@@ -13,6 +13,10 @@ project_root_path=~/git/$project_name
 chart_root_path=$project_root_path/helms
 #版本号,docker的tag
 version=`date +%Y%m%d%H%M`
+#部署的namespace
+deploy_namespace="default"
+#钉钉机器人的token
+ding_robot_token="xxxxxxxxxxx"
 ################### 配置信息end ###################
 ########################初始化 begin###########################
 #不存在项目目录的话，则先进行初始化
@@ -104,7 +108,7 @@ sed -i "s/common-modle-springbootcloud/$pname/g" chart/$pname/values.yaml
 #install or upgrade
 ###############判断是否已发布对应的项目 begin#####################
 helm_ops='install'
-echo helm list -A |grep $pname
+helm list -A |grep $pname
 if [ $? -ne 0 ];then
   echo "不存在"$pname"模块，将先进行install"
   helm_ops="install"
@@ -117,15 +121,15 @@ fi
 echo '进行发布(deploy...)'
 if [ -f "$chart_root_path/values/$pname/values.yaml" ];then
     echo '已经有配置文件了，采用配置文件进行发布'
-	helm $helm_ops $pname chart/$pname -n nnnnnnnnn -f $chart_root_path/values/$pname/values.yaml --set image.tag=$version --set image.repository=$docker_image
+	helm $helm_ops $pname chart/$pname -n $deploy_namespace -f $chart_root_path/values/$pname/values.yaml --set image.tag=$version --set image.repository=$docker_image
 else
     echo '直接进行发布'
-    helm $helm_ops $pname chart/$pname -n nnnnnnnnn --set image.tag=$version --set image.repository=$docker_image
+    helm $helm_ops $pname chart/$pname -n $deploy_namespace --set image.tag=$version --set image.repository=$docker_image
 fi
 
 Message="发布通知: \n模块:${pname} \ngit提交者:$git_last_commit_author \ngit提交内容:$git_last_commit \n------have a nice day------"
 
-curl 'https://oapi.dingtalk.com/robot/send?access_token=yourToken' \
+curl "https://oapi.dingtalk.com/robot/send?access_token=$ding_robot_token" \
            -H 'Content-Type: application/json' \
            -d "  {\"msgtype\": \"text\",
               \"text\": {\"content\": \"$Message\"}}"
