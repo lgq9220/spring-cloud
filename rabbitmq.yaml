@@ -1,0 +1,52 @@
+#-------------定义RabbitMQ部署-----------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbit
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: rabbit
+    spec:
+      containers:
+        - image: /rabbitmq:latest
+          imagePullPolicy: IfNotPresent
+          name: rabbit
+          ports:
+            - containerPort: 15672
+              name: rabbit15672
+              protocol: TCP
+            - containerPort: 5672
+              name: rabbit5672
+              protocol: TCP
+---
+#-----------------定义rabbit的代理服务,serviceName一定要和代码中的一致-----------
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+spec:
+  ports:
+    - name: rabbit32672
+      nodePort: 32672
+      port: 15672
+      protocol: TCP
+      targetPort: 15672
+    - name: rabbit30672
+      nodePort: 30672
+      port: 5672
+      protocol: TCP
+      targetPort: 5672
+  selector:
+    app: rabbit
+  type: NodePort
