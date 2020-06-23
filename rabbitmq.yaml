@@ -19,7 +19,7 @@ spec:
         app: rabbit
     spec:
       containers:
-        - image: /rabbitmq:latest
+        - image: rabbitmq:latest
           imagePullPolicy: IfNotPresent
           name: rabbit
           ports:
