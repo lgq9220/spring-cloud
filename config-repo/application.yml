@@ -22,8 +22,8 @@ spring:
   rabbitmq:
     host: 192.168.85.133
     port: 30672
-    username: user
-    password: bitnami
+    username: guest
+    password: guest
   sleuth:
     sampler:
       percentage: 1
