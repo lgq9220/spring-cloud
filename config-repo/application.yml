@@ -20,10 +20,10 @@ ribbon:
 
 spring:
   rabbitmq:
-    host: 192.168.85.133
-    port: 30672
-    username: guest
-    password: guest
+    host: ${RABBIT_MQ_HOST:rabbitmq}
+    port: ${RABBIT_MQ_PORT:30672}
+    username: ${RABBIT_MQ_USERNAME:guest}
+    password: ${RABBIT_MQ_PASSWORD:guest}
   sleuth:
     sampler:
       percentage: 1
