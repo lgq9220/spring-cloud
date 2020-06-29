@@ -22,8 +22,8 @@ spring:
   rabbitmq:
     host: ${RABBITMQ_SERVER_HOST:rabbitmq}
     port: ${RABBITMQ_SERVER_PORT:30672}
-    username: ${RABBITMQ_SERVER_USERNAME:guest}
-    password: ${RABBITMQ_SERVER_PASSWORD:guest}
+    username: ${RABBITMQ_SERVER_USERNAME:user}
+    password: ${RABBITMQ_SERVER_PASSWORD:bitnami}
 
 security:
   user:
