@@ -21,6 +21,6 @@ public class ServiceBController {
     @GetMapping(value = "/")
     public String printServiceB() {
         ServiceInstance serviceInstance = discoveryClient.getLocalServiceInstance();
-        return serviceInstance.getServiceId() + " (" + serviceInstance.getHost() + ":" + serviceInstance.getPort() + ")" + "===>Say " + msg;
+        return serviceInstance.getServiceId() + " (" + serviceInstance.getHost() + ":" + serviceInstance.getPort() + ")" + "===>[][i am v2][i am v2][i am v2][]Say " + msg;
     }
 }
