@@ -1,5 +1,3 @@
-
-
 hystrix:
   command:
     default:
@@ -11,6 +9,10 @@ hystrix:
 ribbon:
   ReadTimeout: 5000
   ConnectTimeout: 5000
+
+feign:
+  hystrix:
+    enabled: true
 
 spring:
   kubernetes:
