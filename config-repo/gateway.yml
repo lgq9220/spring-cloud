@@ -16,8 +16,8 @@ spring:
           uri: lb://svca-service
           predicates:
             - Path=/hello/**
-            filters:
-              - StripPrefix=1
+          filters:
+            - StripPrefix=1
 
 hystrix:
   command:
