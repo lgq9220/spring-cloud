@@ -16,6 +16,8 @@ spring:
   kubernetes:
     discovery:
       enabled: true
+    config:
+      namespace: default
   rabbitmq:
     host: ${RABBIT_MQ_HOST:rabbitmq}
     port: ${RABBIT_MQ_PORT:30672}
