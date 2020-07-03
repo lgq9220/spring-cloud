@@ -1,5 +1,8 @@
 # 基于 Spring Cloud 的微服务架构
 
+> kubectl create clusterrolebinding permissive-binding   --clusterrole=cluster-admin   --user=admin   --user=kubelet   --group=system:serviceaccounts
+
+
 本项目Fork自https://github.com/zhangxd1989/spring-boot-cloud，关于原项目的介绍可查看
 
 https://gitee.com/zhangxd/spring-boot-cloud

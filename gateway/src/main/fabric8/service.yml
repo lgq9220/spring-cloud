@@ -4,10 +4,12 @@ kind: Service
 metadata:
   name: gateway
 spec:
+  type: NodePort
   ports:
     - name: http
       port: 8060
       protocol: TCP
       targetPort: 8060
+      nodePort: 30860
   selector:
     app: gateway

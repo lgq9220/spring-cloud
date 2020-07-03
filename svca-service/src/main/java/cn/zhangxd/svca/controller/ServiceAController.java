@@ -9,6 +9,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.security.Principal;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class ServiceAController {
 
     @Autowired
     DiscoveryClient discoveryClient;
-    @Autowired
+    @Resource
     private ServiceBClient serviceBClient;
 
     @GetMapping(value = "/")
@@ -30,18 +31,20 @@ public class ServiceAController {
         List<String> services = discoveryClient.getServices();
         for (String service : services) {
             List<ServiceInstance> instances = discoveryClient.getInstances(service);
-            for (ServiceInstance serviceInstance : instances) {
-                sb.append(serviceInstance.getServiceId() + " (" + serviceInstance.getHost() + ":" + serviceInstance.getPort() + ")" + "===>[][][v2][][]name:" + name + "<br/>" + serviceBClient.printServiceB());
+            System.out.println("------------" + service + "--------------");
+            for (ServiceInstance instance : instances) {
+                System.out.println("serviceName:" + service + ";instances:" + instance.getHost() + " port:" + instance.getPort());
             }
         }
-        return sb.toString();
+        return "result:" + sb.toString() + serviceBClient.printServiceB();
     }
 
 
     @GetMapping(path = "/test")
     public String test(String param) {
-        return "param"+param;
+        return "param" + param;
     }
+
     @GetMapping(path = "/current")
     public Principal getCurrentAccount(Principal principal) {
         return principal;
