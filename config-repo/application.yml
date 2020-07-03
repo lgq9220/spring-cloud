@@ -1,11 +1,3 @@
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 10000
-
 ribbon:
   ReadTimeout: 5000
   ConnectTimeout: 5000
@@ -22,25 +14,4 @@ spring:
       all-namespaces: true
     config:
       namespace: default
-  rabbitmq:
-    host: ${RABBIT_MQ_HOST:rabbitmq}
-    port: ${RABBIT_MQ_PORT:30672}
-    username: ${RABBIT_MQ_USERNAME:user}
-    password: ${RABBIT_MQ_PASSWORD:bitnami}
-  sleuth:
-    sampler:
-      percentage: 1
-    integration:
-      enabled: false
-    scheduled:
-      skip-pattern: "^org.*HystrixStreamTask$"
 
-authserver:
-    hostname: auth-service
-    port: 5000
-    contextPath: /uaa
-
-security:
-  oauth2:
-    resource:
-      user-info-uri: http://${authserver.hostname}:${authserver.port}${authserver.contextPath}/current
