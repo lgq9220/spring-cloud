@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+spec:
+  ports:
+    - name: http
+      port: 8060
+      protocol: TCP
+      targetPort: 8060
+  selector:
+    app: gateway

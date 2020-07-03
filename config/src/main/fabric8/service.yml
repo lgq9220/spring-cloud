@@ -7,8 +7,9 @@ spec:
   type: NodePort
   ports:
     - name: http
-      port: 8888
+      port: 30876
       protocol: TCP
-      targetPort: 8888
+      targetPort: 30876
+      nodePort: 30876
   selector:
     app: config
