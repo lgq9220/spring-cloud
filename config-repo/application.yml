@@ -1,10 +1,4 @@
-eureka:
-  instance:
-    hostname: registry
-    prefer-ip-address: true
-  client:
-    service-url:
-      defaultZone: http://user:${REGISTRY_SERVER_PASSWORD:password}@registry:8761/eureka/
+
 
 hystrix:
   command:
@@ -19,6 +13,9 @@ ribbon:
   ConnectTimeout: 5000
 
 spring:
+  kubernetes:
+    discovery:
+      enabled: true
   rabbitmq:
     host: ${RABBIT_MQ_HOST:rabbitmq}
     port: ${RABBIT_MQ_PORT:30672}
