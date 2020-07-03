@@ -5,6 +5,20 @@ management:
   security:
     enabled: false
 
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: service_a
+          uri: lb://svca-service
+          predicates:
+            - Path=/hello/**
+            filters:
+              - StripPrefix=1
+
 hystrix:
   command:
     default:
@@ -16,17 +30,3 @@ hystrix:
 ribbon:
   ReadTimeout: 10000
   ConnectTimeout: 10000
-
-zuul:
-  ignoredServices: '*'
-  routes:
-    auth-service:
-      path: /uaa/**
-      stripPrefix: false
-      sensitiveHeaders:
-    svca-service:
-      path: /svca/**
-      sensitiveHeaders:
-    svcb-service:
-      path: /svcb/**
-      sensitiveHeaders:
