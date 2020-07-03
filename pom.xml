@@ -171,7 +171,7 @@
                         </executions>
                         <configuration>
                             <!--docker需要开启远程访问-->
-                            <dockerHost>http://192.168.113.148:2375</dockerHost>
+                            <dockerHost>http://haiyang.dockerhost.com:2375</dockerHost>
                             <enricher>
                                 <config>
                                     <fmp-service>
