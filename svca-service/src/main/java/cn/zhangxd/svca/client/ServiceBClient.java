@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(name = "svcb-service", fallback = ServiceBClient.ServiceBClientFallback.class)
+@FeignClient(name = "svcb-service",url = "${local.feign.server.svcb-service.url:}",fallback = ServiceBClient.ServiceBClientFallback.class)
 public interface ServiceBClient {
 
     @GetMapping(value = "/")

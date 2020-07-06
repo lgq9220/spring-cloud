@@ -25,9 +25,20 @@ public class ServiceAController {
     @Resource
     private ServiceBClient serviceBClient;
 
+
+    @GetMapping(value = "getInstances")
+    public String getInstances(String serviceName) {
+        List<ServiceInstance> instances = discoveryClient.getInstances(serviceName);
+        StringBuilder sb = new StringBuilder();
+        for (ServiceInstance instance : instances) {
+            sb.append("uri:" + instance.getUri() + " host:" + instance.getHost() + " port:" + instance.getPort());
+        }
+
+        return "result,instances:" + instances.toString() + " list:" + sb.toString();
+    }
+
     @GetMapping(value = "/")
     public String printServiceA() {
-        StringBuilder sb = new StringBuilder();
         List<String> services = discoveryClient.getServices();
         for (String service : services) {
             List<ServiceInstance> instances = discoveryClient.getInstances(service);
@@ -36,7 +47,7 @@ public class ServiceAController {
                 System.out.println("serviceName:" + service + ";instances:" + instance.getHost() + " port:" + instance.getPort());
             }
         }
-        return "result:" + sb.toString() + serviceBClient.printServiceB();
+        return "result:" + serviceBClient.printServiceB();
     }
 
 
