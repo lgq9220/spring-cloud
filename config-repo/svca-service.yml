@@ -1,4 +1,9 @@
 server:
   port: 8080
-
-name: zhangxd
+spring:
+  cloud:
+    kubernetes:
+      discovery:
+        enabled: true
+      client:
+        namespace: default
