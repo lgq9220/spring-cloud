@@ -2,6 +2,19 @@ spring:
   application:
     name: gateway
   cloud:
+# 本地调试时，不从lb中访问服务
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: service_a
+          uri: http://127.0.0.1:8080
+          predicates:
+            - Path=/hello/**
+          filters:
+            - StripPrefix=1
+# 开发时注释掉下面的信息，不从config拉配置
     config:
       uri: http://config:30876
       fail-fast: true
