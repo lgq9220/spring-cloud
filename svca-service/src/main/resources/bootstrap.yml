@@ -3,7 +3,6 @@ spring:
     name: svca-service
   cloud:
     config:
-      profile: ${config.profile:}
       uri: http://config:30876
       fail-fast: true
       username: user
