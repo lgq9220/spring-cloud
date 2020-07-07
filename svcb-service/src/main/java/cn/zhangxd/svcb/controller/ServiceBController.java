@@ -30,6 +30,6 @@ public class ServiceBController {
                 sb.append(serviceInstance.getServiceId() + " (" + serviceInstance.getHost() + ":" + serviceInstance.getPort() + ")" + "===>[][i am v2][i am v2][i am v2][]Say " + msg);
             }
         }
-        return sb.toString();
+        return "i am svcb-service" + sb.toString();
     }
 }
