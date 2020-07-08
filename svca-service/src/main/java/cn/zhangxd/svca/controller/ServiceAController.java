@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.security.Principal;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 @RefreshScope
 @RestController
@@ -24,6 +27,35 @@ public class ServiceAController {
     DiscoveryClient discoveryClient;
     @Resource
     private ServiceBClient serviceBClient;
+
+
+    @GetMapping(value = "getProp")
+    public String getProp() {
+        Properties properties = System.getProperties();
+        StringBuilder stringBuilder = new StringBuilder();
+        Enumeration<?> enumeration = properties.propertyNames();
+        while (enumeration.hasMoreElements()) {
+            Object o = enumeration.nextElement();
+            String line = "key:" + enumeration.nextElement() + " value:" + properties.get(o);
+            line = line + "\n";
+            System.out.println(line);
+            stringBuilder.append(line);
+        }
+        return stringBuilder.toString();
+    }
+
+    @GetMapping(value = "getEnv")
+    public String getEnv() {
+        Map<String, String> getenv = System.getenv();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String s : getenv.keySet()) {
+            String line = "key:" + s + " value:" + getenv.get(s);
+            line = line + "\n";
+            System.out.println(line);
+            stringBuilder.append(line);
+        }
+        return stringBuilder.toString();
+    }
 
 
     @GetMapping(value = "getInstances")
