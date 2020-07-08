@@ -1,0 +1,165 @@
+#-------------config-----------------
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: config
+    spec:
+      containers:
+        - image: ccr.ccs.tencentyun.com/spring-boot-cloud/config:v3
+          imagePullPolicy: Always
+          name: config
+          ports:
+            - containerPort: 30876
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: config
+spec:
+  ports:
+    - name: http
+      port: 30876
+      protocol: TCP
+      targetPort: 30876
+  selector:
+    app: config
+#-------------svca-service-----------------
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svca-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: svca-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: svca-service
+    spec:
+      containers:
+        - image: ccr.ccs.tencentyun.com/spring-boot-cloud/svca-service:v3
+          imagePullPolicy: Always
+          name: svca-service
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svca-service
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: svca-service
+#-------------svcb-service-----------------
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svcb-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: svcb-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: svcb-service
+    spec:
+      containers:
+        - image: ccr.ccs.tencentyun.com/spring-boot-cloud/svcb-service:v3
+          imagePullPolicy: Always
+          name: svcb-service
+          ports:
+            - containerPort: 8070
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svcb-service
+spec:
+  ports:
+    - name: http
+      port: 8070
+      protocol: TCP
+      targetPort: 8070
+  selector:
+    app: svcb-service
+#-------------gateway-----------------
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+        - image: ccr.ccs.tencentyun.com/spring-boot-cloud/gateway:v3
+          imagePullPolicy: Always
+          name: gateway
+          ports:
+            - containerPort: 8060
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+spec:
+  ports:
+    - name: http
+      port: 8060
+      protocol: TCP
+      targetPort: 8060
+  selector:
+    app: gateway
+---

@@ -27,7 +27,7 @@ public class ServiceBController {
         for (String service : services) {
             List<ServiceInstance> instances = discoveryClient.getInstances(service);
             for (ServiceInstance serviceInstance : instances) {
-                sb.append(serviceInstance.getServiceId() + " (" + serviceInstance.getHost() + ":" + serviceInstance.getPort() + ")" + "===>[][i am v2][i am v2][i am v2][]Say " + msg);
+                sb.append(serviceInstance.getServiceId() + " (" + serviceInstance.getHost() + ":" + serviceInstance.getPort() + ")" + "===>[][i am v5][i am v5][i am v5][]Say " + msg);
             }
         }
         return "i am svcb-service" + sb.toString();
