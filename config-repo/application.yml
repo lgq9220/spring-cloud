@@ -9,6 +9,8 @@ feign:
 spring:
   cloud:
     kubernetes:
+      ribbon:
+        mode: service
       discovery:
         enabled: true
       client:
