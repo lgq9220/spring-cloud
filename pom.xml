@@ -41,6 +41,10 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -141,7 +145,7 @@
                     <configuration>
                         <images>
                             <image>
-                                <name>${docker.image.prefix}/${project.artifactId}:v3</name>
+                                <name>ccr.ccs.tencentyun.com/${docker.image.prefix}/${project.artifactId}:v5</name>
                                 <alias>${project.name}</alias>
                                 <build>
                                     <dockerFile>${project.basedir}/Dockerfile</dockerFile>
@@ -177,7 +181,7 @@
                         </executions>
                         <configuration>
                             <!--docker需要开启远程访问-->
-                            <dockerHost>http://haiyang.dockerhost.com:2375</dockerHost>
+<!--                            <dockerHost>http://haiyang.dockerhost.com:2375</dockerHost>-->
                             <enricher>
                                 <config>
                                     <fmp-service>
@@ -185,13 +189,12 @@
                                     </fmp-service>
                                 </config>
                             </enricher>
-
                             <!--registry地址,用于推送镜像-->
-                            <!--                            <registry>ccr.ccs.tencentyun.com</registry>-->
+<!--                            <registry>ccr.ccs.tencentyun.com</registry>-->
                             <!--认证配置,用于私有registry认证,如果忘记了可以去阿里的registry查看-->
                             <authConfig>
                                 <push>
-                                    <username>your usernmae</username>
+                                    <username>your username</username>
                                     <password>your password</password>
                                 </push>
                             </authConfig>
