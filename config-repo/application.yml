@@ -6,6 +6,10 @@ feign:
   hystrix:
     enabled: true
 
+sys:
+  config:
+    value: default789
+
 spring:
   cloud:
     kubernetes:
