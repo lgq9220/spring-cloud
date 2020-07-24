@@ -1,0 +1,21 @@
+ribbon:
+  ReadTimeout: 5000
+  ConnectTimeout: 5000
+
+feign:
+  hystrix:
+    enabled: true
+
+sys:
+  config:
+    value: dev456
+
+spring:
+  cloud:
+    kubernetes:
+      ribbon:
+        mode: service
+      discovery:
+        enabled: true
+      client:
+        namespace: default
