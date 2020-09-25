@@ -8,7 +8,7 @@ feign:
 #  hystrix:
 #    enabled: false
   sentinel:
-    enabled: true
+    enabled: false
 sys:
   config:
     value: dev456
