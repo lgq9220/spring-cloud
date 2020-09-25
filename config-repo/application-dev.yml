@@ -2,11 +2,11 @@ ribbon:
   ReadTimeout: 5000
   ConnectTimeout: 5000
 
-feign:
-  hystrix:
-    enabled: false
-  sentinel:
-    enabled: true
+#feign:
+#  hystrix:
+#    enabled: false
+#  sentinel:
+#    enabled: false
 sys:
   config:
     value: dev456
