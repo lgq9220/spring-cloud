@@ -4,9 +4,10 @@ ribbon:
 
 #如果hystrix和sentinel都引入了，但是没有开启哪一个熔断器，默认会采用hystrix的;feign默认采用的也是hystrix
 #如果是HystrixTimer报的异常，则是hystix熔断触发的
+#如果sentinel指定的是关闭,hystirx没有指定，则也会是用hystrix
 feign:
-#  hystrix:
-#    enabled: false
+  hystrix:
+    enabled: false
   sentinel:
     enabled: false
 sys:
