@@ -4,8 +4,9 @@ ribbon:
 
 feign:
   hystrix:
+    enabled: false
+  sentinel:
     enabled: true
-
 sys:
   config:
     value: dev456
