@@ -30,7 +30,7 @@
         <java.version>1.8</java.version>
         <docker.image.prefix>spring-boot-cloud</docker.image.prefix>
         <spring.cloud.version>Hoxton.SR5</spring.cloud.version>
-        <spring-boot-admin.version>1.5.4</spring-boot-admin.version>
+        <spring-boot-admin.version>3.1.2</spring-boot-admin.version>
         <fabric8.maven.plugin.version>4.4.1</fabric8.maven.plugin.version>
         <spring-cloud-k8s-ribbon.maven.plugin.version>1.1.1.RELEASE</spring-cloud-k8s-ribbon.maven.plugin.version>
     </properties>
